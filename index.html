@@ -1,123 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Morse Translator</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>摩斯密码翻译器</title>
   <style>
     body {
-      font-family: "Segoe UI", "Noto Sans SC", sans-serif;
-      background: #f1f3f4;
+      font-family: "Microsoft YaHei", "Noto Sans SC", sans-serif;
+      background-color: #f8f9fa;
       margin: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      padding: 0;
     }
 
-    .container {
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 90%;
-      max-width: 900px;
-      padding: 20px;
+    header {
+      background-color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 20px 0;
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #333;
     }
 
-    .content {
-      display: flex;
+    main {
+      max-width: 800px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    p {
+      color: #555;
+      font-size: 1rem;
+    }
+
+    textarea {
       width: 100%;
-      overflow: hidden;
-    }
-
-    .panel {
-      flex: 1;
+      height: 120px;
+      font-size: 1rem;
       padding: 10px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .panel textarea {
-      flex: 1;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
       resize: none;
-      border: none;
       outline: none;
-      font-size: 1.2rem;
-      padding: 10px;
-      background: #fafafa;
-      border-radius: 8px;
-      line-height: 1.5;
     }
 
-    .middle {
-      width: 80px;
-      background: #e7ebee;
+    textarea:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 5px rgba(79,70,229,0.3);
+    }
+
+    .btn-container {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      flex: 1;
+      background-color: #22c55e;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 1rem;
       cursor: pointer;
       transition: 0.3s;
     }
 
-    .middle:hover {
-      background: #d4d8db;
+    button:hover {
+      background-color: #16a34a;
     }
 
-    .middle span {
-      font-size: 2rem;
-      user-select: none;
-    }
-
-    h2 {
-      font-size: 1rem;
-      color: #5f6368;
-      margin-bottom: 10px;
-    }
-
-    .output-box {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      background: #fafafa;
-      border-radius: 8px;
-      padding: 10px;
-      font-family: monospace;
-      font-size: 1.2rem;
-      overflow-y: auto;
-      min-height: 100px;
-    }
-
-    .cell {
-      background: #fff;
-      border: 1px solid #d1d5db;
-      padding: 6px 10px;
-      border-radius: 6px;
-      min-width: 45px;
+    footer {
       text-align: center;
-    }
-
-    .empty {
-      background: #e5e7eb;
+      margin-top: 30px;
+      color: #666;
+      font-size: 0.9rem;
     }
 
     .copy-btn {
-      margin-top: 10px;
-      background: #4f46e5;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.3s;
+      background-color: #4f46e5;
     }
 
     .copy-btn:hover {
-      background: #4338ca;
+      background-color: #4338ca;
     }
 
     .copied {
@@ -125,37 +95,30 @@
       font-size: 0.9rem;
       margin-top: 6px;
       display: none;
-    }
-
-    footer {
-      margin-top: 15px;
-      font-size: 0.9rem;
-      color: #6b7280;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="content">
-      <div class="panel">
-        <h2 id="left-label">Text</h2>
-        <textarea id="inputText" placeholder="Type text here..."></textarea>
-      </div>
+  <header>摩斯密码翻译器</header>
+  <main>
+    <p>支持中文与英文，例如：I LOVE YOU 我爱你</p>
+    <textarea id="inputText" placeholder="请输入文字或摩斯密码..."></textarea>
 
-      <div class="middle" id="swapBtn" title="Swap translation direction">
-        <span>⇆</span>
-      </div>
-
-      <div class="panel">
-        <h2 id="right-label">Morse Code</h2>
-        <div id="outputBox" class="output-box"></div>
-        <button class="copy-btn" id="copyBtn">Copy</button>
-        <div id="copiedMsg" class="copied">Copied!</div>
-      </div>
+    <div class="btn-container">
+      <button id="toMorseBtn">文字转摩斯密码 ↓</button>
+      <button id="toTextBtn">摩斯密码转文字 ↑</button>
     </div>
 
-    <footer>Made by Dylan Law</footer>
-  </div>
+    <p>输出结果：</p>
+    <textarea id="outputText" readonly placeholder="翻译结果将显示在这里"></textarea>
+
+    <div class="btn-container">
+      <button class="copy-btn" id="copyBtn">复制结果</button>
+    </div>
+    <div id="copiedMsg" class="copied">已复制！</div>
+  </main>
+  <footer>Made by Dylan Law</footer>
 
   <script>
     const morseCode = {
@@ -166,79 +129,39 @@
       'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-',
       'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
       'Y': '-.--', 'Z': '--..',
-      '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....',
-      '6': '-....', '7': '--...', '8': '---..', '9': '----.', '0': '-----',
-      ' ': '/'
+      '0': '-----', '1': '.----', '2': '..---', '3': '...--', 
+      '4': '....-', '5': '.....', '6': '-....', '7': '--...', 
+      '8': '---..', '9': '----.',
+      ' ': '/', '，': '--..--', '。': '.-.-.-', '？': '..--..'
     };
 
     const reverseMorse = Object.fromEntries(Object.entries(morseCode).map(([k, v]) => [v, k]));
-    let mode = "text-to-morse";
 
-    const input = document.getElementById("inputText");
-    const output = document.getElementById("outputBox");
-    const swapBtn = document.getElementById("swapBtn");
-    const leftLabel = document.getElementById("left-label");
-    const rightLabel = document.getElementById("right-label");
-    const copyBtn = document.getElementById("copyBtn");
-    const copiedMsg = document.getElementById("copiedMsg");
-
-    function beautifyMorse(code) {
-      return code.replace(/\./g, '·').replace(/-/g, '—');
+    function textToMorse(text) {
+      return text.toUpperCase().split('').map(char => morseCode[char] || '?').join(' ');
     }
 
-    function convert() {
-      output.innerHTML = '';
-      const text = input.value.trim();
-
-      if (mode === "text-to-morse") {
-        for (let char of text.toUpperCase()) {
-          const cell = document.createElement("div");
-          cell.classList.add("cell");
-          if (morseCode[char]) {
-            cell.innerText = beautifyMorse(morseCode[char]);
-          } else if (char === ' ') {
-            cell.innerText = '';
-            cell.classList.add("empty");
-          } else {
-            cell.innerText = '?';
-          }
-          output.appendChild(cell);
-        }
-      } else {
-        const codes = text.replace(/·/g, '.').replace(/—/g, '-').split(' ');
-        for (let code of codes) {
-          const cell = document.createElement("div");
-          cell.classList.add("cell");
-          if (reverseMorse[code]) {
-            cell.innerText = reverseMorse[code];
-          } else if (code === '/') {
-            cell.innerText = '';
-            cell.classList.add("empty");
-          } else {
-            cell.innerText = '?';
-          }
-          output.appendChild(cell);
-        }
-      }
+    function morseToText(morse) {
+      return morse.trim().split(' ').map(code => reverseMorse[code] || '?').join('');
     }
 
-    input.addEventListener("input", convert);
+    document.getElementById('toMorseBtn').onclick = function() {
+      const input = document.getElementById('inputText').value;
+      document.getElementById('outputText').value = textToMorse(input);
+    };
 
-    swapBtn.addEventListener("click", () => {
-      mode = (mode === "text-to-morse") ? "morse-to-text" : "text-to-morse";
-      leftLabel.textContent = (mode === "text-to-morse") ? "Text" : "Morse Code";
-      rightLabel.textContent = (mode === "text-to-morse") ? "Morse Code" : "Text";
-      input.value = "";
-      output.innerHTML = "";
-      input.placeholder = (mode === "text-to-morse") ? "Type text here..." : "Type Morse code here (separate by spaces)...";
-    });
+    document.getElementById('toTextBtn').onclick = function() {
+      const input = document.getElementById('inputText').value.replace(/·/g, '.').replace(/—/g, '-');
+      document.getElementById('outputText').value = morseToText(input);
+    };
 
-    copyBtn.addEventListener("click", () => {
-      const copiedText = Array.from(output.children).map(c => c.innerText).join(' ');
-      navigator.clipboard.writeText(copiedText);
-      copiedMsg.style.display = "block";
-      setTimeout(() => copiedMsg.style.display = "none", 2000);
-    });
+    document.getElementById('copyBtn').onclick = function() {
+      const output = document.getElementById('outputText');
+      navigator.clipboard.writeText(output.value);
+      const msg = document.getElementById('copiedMsg');
+      msg.style.display = 'block';
+      setTimeout(() => msg.style.display = 'none', 2000);
+    };
   </script>
 </body>
 </html>
